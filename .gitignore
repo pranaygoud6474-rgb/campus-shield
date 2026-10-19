@@ -1,0 +1,46 @@
+# Local secrets and environment-specific configuration
+.env
+.env.*
+!.env.example
+!.env.*.example
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+*.local
+**/application-local.yml
+**/application-local.yaml
+**/application-local.properties
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Build output, dependencies, and test artifacts
+**/node_modules/
+**/target/
+**/dist/
+**/dist-ssr/
+**/coverage/
+**/playwright-report/
+**/test-results/
+*.log
+logs/
+npm-debug.log*
+
+# Local databases, backups, and packaged workspace archives
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.bak
+*.sql.gz
+*.zip
+
+# IDE and operating-system files
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
