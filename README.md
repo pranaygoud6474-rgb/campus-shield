@@ -22,6 +22,26 @@ For verified work and known gaps, see [IMPLEMENTATION_STATUS.md](./IMPLEMENTATIO
 
 The local environment used during this verification had MySQL listening on port `3307`; change `DB_PORT` below if yours uses another port. MySQL credentials are intentionally read only from local environment/configuration and must not be pasted into chat or committed.
 
+## Render deployment
+
+The backend container defaults to the `dev` Spring profile. Its datasource settings are defined centrally in `application.yml`; `application-dev.yml` only sets the development schema-validation mode. For Render with an Aiven MySQL service, configure these Web Service environment variables in the Render dashboard:
+
+| Variable | Value / format |
+|---|---|
+| `DB_HOST` | Aiven service hostname only (no scheme or port) |
+| `DB_PORT` | Aiven service port, for example `18082` |
+| `DB_NAME` | Database/schema name, for example `defaultdb` |
+| `DB_USERNAME` | Database username, for example `avnadmin` |
+| `DB_PASSWORD` | Aiven password; enter only in Render's secret environment-variable field |
+| `DB_SSL_MODE` | `REQUIRED` to require encrypted MySQL transport |
+| `JWT_SECRET` | Random secret with at least 32 UTF-8 bytes |
+| `BOOTSTRAP_ADMIN_ENABLED` | `false` unless deliberately enabling a one-time initial administrator |
+| `FRONTEND_URL` | Exact deployed frontend origin, including scheme and hostname |
+
+`DB_URL` is optional and, when supplied, takes precedence over the host/port/name variables; use a complete Connector/J URL with its TLS options. Do not set `DB_URL` and expect `DB_SSL_MODE` to modify it. The Dockerfile uses Render's automatically supplied `PORT` (with `10000` as the local/container fallback), so no `SERVER_PORT` override is required. The MySQL driver is included in the packaged application; no local properties file is required in the image.
+
+For stronger server identity validation than encryption-only `REQUIRED`, configure Connector/J with `sslMode=VERIFY_IDENTITY` and supply/configure the Aiven CA certificate as documented by Aiven. Never put the certificate or database credentials in the repository or Docker image.
+
 ## Verify MySQL access (read-only)
 
 The isolated local verification database is `campus_safety_verify` on port `3307`. Inspect the existing account and schema with the MySQL client; `-p` prompts locally and does not put the password in the command:
