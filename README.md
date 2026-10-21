@@ -40,7 +40,7 @@ The backend container defaults to the `dev` Spring profile. Its datasource setti
 
 `DB_URL` is optional and, when supplied, takes precedence over the host/port/name variables; use a complete Connector/J URL with its TLS options. Do not set `DB_URL` and expect `DB_SSL_MODE` to modify it. The Dockerfile uses Render's automatically supplied `PORT` (with `10000` as the local/container fallback), so no `SERVER_PORT` override is required. The MySQL driver is included in the packaged application; no local properties file is required in the image.
 
-For stronger server identity validation than encryption-only `REQUIRED`, configure Connector/J with `sslMode=VERIFY_IDENTITY` and supply/configure the Aiven CA certificate as documented by Aiven. Never put the certificate or database credentials in the repository or Docker image.
+For the Vercel frontend, set `FRONTEND_URL` to `https://campus-shield-pi.vercel.app` exactly (origin only; no API path or trailing slash). For stronger server identity validation than encryption-only `REQUIRED`, configure Connector/J with `sslMode=VERIFY_IDENTITY` and supply/configure the Aiven CA certificate as documented by Aiven. Never put the certificate or database credentials in the repository or Docker image.
 
 ## Verify MySQL access (read-only)
 
@@ -103,10 +103,10 @@ npm.cmd install
 npm.cmd run dev -- --host 127.0.0.1
 ```
 
-Open `http://localhost:5173`. The frontend defaults to the backend API at `http://localhost:8080/api/v1`; to override it, set `VITE_API_URL` before running Vite, for example:
+Open `http://localhost:5173`. During local development, the frontend defaults to `http://localhost:8080/api/v1` if `VITE_API_BASE_URL` is unset. Production builds require `VITE_API_BASE_URL` and do not fall back to localhost. For the Vercel deployment, set it to `https://campus-shield-backend-2gp1.onrender.com/api/v1` in the Vercel project settings, then redeploy so Vite embeds the value at build time.
 
 ```cmd
-set VITE_API_URL=http://localhost:8080/api/v1
+set VITE_API_BASE_URL=http://localhost:8080/api/v1
 npm.cmd run dev -- --host 127.0.0.1
 ```
 

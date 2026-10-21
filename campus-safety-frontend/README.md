@@ -9,17 +9,19 @@ From Windows Command Prompt:
 ```cmd
 cd /d "C:\AI-Powered Campus Safety-1\campus-safety-frontend"
 npm.cmd install
-set VITE_API_URL=http://localhost:8080/api/v1
+set VITE_API_BASE_URL=http://localhost:8080/api/v1
 npm.cmd run dev -- --host 127.0.0.1
 ```
 
 The backend must be available at the configured API URL. Full MySQL and backend startup instructions are in the repository [README](../README.md).
+For Vercel production builds, set `VITE_API_BASE_URL` to `https://campus-shield-backend-2gp1.onrender.com/api/v1` in the Vercel project settings, then redeploy so Vite embeds the value. Production builds require this variable and never default to localhost.
 
 ## Checks
 
 ```cmd
 npm.cmd run build
 npm.cmd run lint
+npm.cmd run test:unit
 npm.cmd run test:e2e
 ```
 
